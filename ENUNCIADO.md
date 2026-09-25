@@ -32,3 +32,68 @@ Un cliente, que lleva su negocio y no es programador, dice esto:
 
 Está fuera de alcance, a propósito, para que quepa en 120 minutos: autenticación,
 paginación, filtros, pruebas automatizadas y despliegue.
+
+---
+
+# El contrato
+
+Este es el **único** acuerdo que de verdad importa: si la API cumple esto, el
+cliente no necesita saber nada más. Ni Express, ni MySQL, ni qué archivos hay.
+
+Un contrato así se puede cambiar por dentro sin romper a nadie. Por eso se
+escribe antes de escribir código.
+
+## Los cinco peticiones
+
+| Verbo | Dirección | Qué hace | Respuesta |
+|---|---|---|---|
+| `GET` | `/api/productos` | Lista todos | `200` + array |
+| `GET` | `/api/productos/3` | Uno por su id | `200` + objeto, o `404` |
+| `POST` | `/api/productos` | Crea uno | `201` + el objeto creado |
+| `PUT` | `/api/productos/3` | Lo actualiza | `200` + el objeto ya cambiado |
+| `DELETE` | `/api/productos/3` | Lo borra | `204` y nada más |
+
+## La forma de un producto
+
+```json
+{
+  "id": 1,
+  "nombre": "Teclado mecánico",
+  "precio": 89.9,
+  "stock": 12
+}
+```
+
+`id` lo pone la base de datos, no el cliente. `precio` es un número: por eso el
+cliente ve `89.9` aunque debajo se guarde como `89.90`.
+
+## Un error, también con forma
+
+```json
+{
+  "error": {
+    "message": "El nombre debe tener entre 2 y 120 caracteres"
+  }
+}
+```
+
+El mismo formato para todos los errores, para que el cliente siempre sepa dónde
+mirar.
+
+## La promesa
+
+```bash
+curl localhost:3000/api/productos
+```
+
+devuelve estos diez productos, en este orden:
+
+```json
+[
+  { "id": 1, "nombre": "Teclado mecánico", "precio": 89.9, "stock": 12 },
+  { "id": 2, "nombre": "Mouse inalámbrico", "precio": 34.5, "stock": 20 }
+]
+```
+
+…y hay diez más. Esa es toda la lista. Si al final del taller esa orden de
+comando devuelve esos diez productos, el taller está terminado.
