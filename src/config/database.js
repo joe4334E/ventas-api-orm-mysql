@@ -2,6 +2,7 @@
 
 import dotenv from 'dotenv';
 import mysql from 'mysql2/promise';
+import { Sequelize } from 'sequelize';
 
 // quiet: true evita que dotenv imprima 'injected env from .env'.
 // Ese ruido confunde: parece un mensaje de error y no lo es.
@@ -40,4 +41,30 @@ export async function query(sql, parametros = []) {
   return resultado;
 }
 
-export default pool;
+export default pool;   // el default sigue siendo el pool: es lo que usa el modelo actual
+
+// ---------------------------------------------------------------
+// Sequelize todavía no hace nada. Vive aquí, junto al pool, y se
+// usará a partir del siguiente to-do. La conexión de mysql2 sigue
+// viva: hasta que las cinco funciones del modelo cambien, el pool es
+// el que trabaja.
+// ---------------------------------------------------------------
+
+export const sequelize = new Sequelize(nombre, usuario, process.env.DB_PASSWORD ?? '', {
+  dialect: 'mysql',
+  host,
+  port: puerto,
+  // false no imprime nada. Poner DB_LOGGING=true en el .env enciende el
+  // log, que es la única forma de ver el SQL que escribe Sequelize.
+  logging: process.env.DB_LOGGING === 'true' ? console.log : false,
+  // Sin esto, un precio guardado como 89.90 vuelve como la cadena
+  // '89.90'. Con esto, vuelve como el número 89.9.
+  dialectOptions: { decimalNumbers: true },
+  define: {
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_unicode_ci',
+    freezeTableName: true,
+    timestamps: false,
+  },
+});
+
