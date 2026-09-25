@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
 import productoRoutes from './routes/producto.routes.js';
+import clienteRoutes from './routes/cliente.routes.js';
 
 const app = express();
 const carpetaActual = path.dirname(fileURLToPath(import.meta.url));
@@ -21,6 +22,7 @@ app.use(express.json({ limit: '100kb' }));
 
 // /api/productos y lo que empieza por ahí lo resuelve producto.routes.js
 app.use('/api/productos', productoRoutes);
+app.use('/api/clientes', clienteRoutes);
 
 // Lo de public/ sale tal cual, sin pasar por una ruta.
 app.use(express.static(carpetaPublica));
@@ -44,6 +46,17 @@ app.use((error, req, res, next) => {
   // en realidad es un 400: culpa del que envía los datos, no del servidor.
   if (error.name === 'SequelizeValidationError') {
     return res.status(400).json({ error: { message: error.errors[0].message } });
+  }
+
+  // Este es OTRO tipo de error, y no es lo mismo. La regla 'unique' la
+  // vigila la BASE DE DATOS, no Sequelize: por eso llega como
+  // UniqueConstraintError y no como ValidationError.
+  //
+  // Si dos peticiones llegan con el mismo email en el mismo milisegundo,
+  // el if de JavaScript no sirve de nada: las dos pasan el mismo filtro.
+  // Solo la base puede parar la segunda.
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    return res.status(409).json({ error: { message: 'Ya existe un registro con ese valor' } });
   }
 
   // No se filtra el error al cliente: un mensaje de MySQL puede contener
