@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 import productoRoutes from './routes/producto.routes.js';
 import clienteRoutes from './routes/cliente.routes.js';
+import vendedorRoutes from './routes/vendedor.routes.js';
 
 const app = express();
 const carpetaActual = path.dirname(fileURLToPath(import.meta.url));
@@ -23,6 +24,7 @@ app.use(express.json({ limit: '100kb' }));
 // /api/productos y lo que empieza por ahí lo resuelve producto.routes.js
 app.use('/api/productos', productoRoutes);
 app.use('/api/clientes', clienteRoutes);
+app.use('/api/vendedores', vendedorRoutes);
 
 // Lo de public/ sale tal cual, sin pasar por una ruta.
 app.use(express.static(carpetaPublica));
