@@ -7,17 +7,18 @@
 //
 //   3. ESCUCHAR  quedarse esperando en un puerto, un número que el sistema
 //                operativo reserva para esta aplicación.
-//
-// Nada de aquí necesita MySQL ni Express todavía. Un servidor es solo eso:
-// alguien llama, alguien contesta, y se queda esperando al siguiente.
 
 import express from 'express';
 
-// ¿En qué puerto? 3000 por defecto, pero se puede cambiar con PORT.
 const port = Number.parseInt(process.env.PORT ?? '3000', 10);
-
-// La aplicación en sí: aquí irá todo lo que sabe hacer.
 const app = express();
 
-// La línea que de verdad pone el servidor en marcha. Sin esto, el archivo
-// termina y el proceso muere.
+// Una ruta: el método y la dirección. Si alguien pide exactamente eso,
+// ejecuta lo que hay entre llaves.
+app.get('/', (req, res) => {
+  res.send('Hola, soy el servidor del taller');
+});
+
+app.listen(port, () => {
+  console.log(`Servidor escuchando en http://localhost:${port}`);
+});
