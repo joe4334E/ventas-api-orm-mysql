@@ -1,3 +1,23 @@
+// ---------------------------------------------------------------
+// ESTE ARCHIVO CAMBIARÁ ENTERO, Y EL CONTROLLER NO SE ENTERARÁ.
+//
+// Un ORM (Object-Relational Mapper) es una capa que traduce esto:
+//
+//   await query('SELECT * FROM productos ORDER BY id')
+//
+// en esto:
+//
+//   await Producto.findAll()
+//
+// Estas cinco funciones de aquí son exactamente las que un ORM
+// automatiza. Cuando termine la unidad, el archivo habrá pasado de
+// 40 líneas de SQL a menos de 25, y devuelven lo mismo: los mismos
+// datos, en el mismo orden, con los mismos errores.
+//
+// La diferencia no es que el SQL desaparezca. El SQL sigue ahí, pero
+// lo escribe el programa en vez de escribirlo tú.
+// ---------------------------------------------------------------
+
 // Todo lo que se le puede preguntar a la tabla productos.
 // Ninguna función de aquí sabe qué es una petición ni una respuesta:
 // eso es del controller. Aquí solo hay SQL.
