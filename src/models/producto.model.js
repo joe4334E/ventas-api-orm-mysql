@@ -27,7 +27,7 @@ import { query } from '../config/database.js';
 import { sequelize } from '../config/database.js';
 
 export async function listar() {
-  return query('SELECT * FROM productos ORDER BY id');
+  return Producto.findAll({ order: [['id', 'ASC']] });
 }
 
 export async function buscarPorId(id) {
