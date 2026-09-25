@@ -1,5 +1,83 @@
-/* Los estilos definitivos llegan en la unidad 8. */
+:root {
+  color-scheme: light dark;
+  --borde: color-mix(in oklab, currentColor 18%, transparent);
+  --tenue: color-mix(in oklab, currentColor 62%, transparent);
+  --aviso: color-mix(in oklab, #d4380d 16%, transparent);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: system-ui, sans-serif;
-  margin: 2rem;
+  margin: 0;
+  padding: 2.5rem 1.25rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.55;
+  max-width: 62rem;
+  margin-inline: auto;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.estado {
+  color: var(--tenue);
+  margin: 0 0 1.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+thead th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tenue);
+  font-weight: 600;
+}
+
+tfoot th,
+tfoot td {
+  font-weight: 600;
+  border-bottom: none;
+  border-top: 2px solid var(--borde);
+}
+
+.col-id,
+.col-stock,
+.col-precio {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.col-id {
+  width: 4rem;
+  color: var(--tenue);
+}
+
+tr.sin-stock td {
+  background: var(--aviso);
+  color: var(--tenue);
+}
+
+tr.sin-stock td:last-child::after {
+  content: 'agotado';
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }

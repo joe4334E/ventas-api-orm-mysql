@@ -10,8 +10,25 @@
   <body>
     <main>
       <h1>Catálogo de productos</h1>
-      <p id="estado">Cargando…</p>
-      <pre id="salida"></pre>
+      <p id="estado" class="estado">Cargando…</p>
+      <table id="tabla-productos" hidden>
+        <thead>
+          <tr>
+            <th scope="col" class="col-id">Id</th>
+            <th scope="col">Producto</th>
+            <th scope="col" class="col-precio">Precio</th>
+            <th scope="col" class="col-stock">Stock</th>
+          </tr>
+        </thead>
+        <tbody id="filas"></tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="2">Total del catálogo</th>
+            <td id="total-valor" class="col-precio"></td>
+            <td id="total-unidades" class="col-stock"></td>
+          </tr>
+        </tfoot>
+      </table>
     </main>
   </body>
 </html>
