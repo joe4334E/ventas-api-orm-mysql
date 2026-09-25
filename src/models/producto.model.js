@@ -31,8 +31,7 @@ export async function listar() {
 }
 
 export async function buscarPorId(id) {
-  const [producto] = await query('SELECT * FROM productos WHERE id = ?', [id]);
-  return producto ?? null;
+  return Producto.findByPk(id);
 }
 
 export async function crear({ nombre, precio, stock }) {
