@@ -29,6 +29,24 @@
           </tr>
         </tfoot>
       </table>
+      <form id="formulario" class="formulario">
+        <h2>Añadir producto</h2>
+        <div class="campos">
+          <label>
+            Nombre
+            <input id="campo-nombre" name="nombre" type="text" required />
+          </label>
+          <label>
+            Precio
+            <input id="campo-precio" name="precio" type="number" step="0.01" min="0" required />
+          </label>
+          <label>
+            Stock
+            <input id="campo-stock" name="stock" type="number" step="1" min="0" required />
+          </label>
+        </div>
+        <button type="submit" id="boton-enviar">Añadir</button>
+      </form>
     </main>
   </body>
 </html>

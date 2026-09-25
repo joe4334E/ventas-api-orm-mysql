@@ -81,3 +81,54 @@ tr.sin-stock td:last-child::after {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+
+.formulario {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--borde);
+}
+
+.formulario h2 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.campos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.campos label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1 1 8rem;
+  font-size: 0.85rem;
+  color: var(--tenue);
+}
+
+.campos input {
+  padding: 0.45rem 0.5rem;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+}
+
+button {
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}

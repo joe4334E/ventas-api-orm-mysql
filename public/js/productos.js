@@ -5,6 +5,8 @@ const tabla = document.querySelector('#tabla-productos');
 const filas = document.querySelector('#filas');
 const totalValor = document.querySelector('#total-valor');
 const totalUnidades = document.querySelector('#total-unidades');
+const formulario = document.querySelector('#formulario');
+const botonEnviar = document.querySelector('#boton-enviar');
 
 // El euro necesita dos decimales siempre, y un separador de miles que en
 // español es un punto: 1.234,56 € y no 1,234.56 €.
@@ -73,5 +75,48 @@ async function cargarProductos() {
     console.error(error);
   }
 }
+
+async function crearProducto(evento) {
+  // Sin esto, el navegador recarga la página entera y se pierde el trabajo.
+  evento.preventDefault();
+
+  // Los campos de un formulario SIEMPRE llegan como texto, y un texto se
+  // comporta distinto que un número: '10' + 1 da '101', y '0' === 0 es false.
+  // La tabla ya compara con === 0, así que un stock enviado como texto
+  // llegaría como "0" y la fila no se marcaría como agotada. Convertir aquí
+  // es que lo que se envía y lo que se recibe sean siempre del mismo tipo.
+  const datos = {
+    nombre: formulario.nombre.value,
+    precio: Number(formulario.precio.value),
+    stock: Number(formulario.stock.value),
+  };
+
+  botonEnviar.disabled = true;
+  try {
+    const response = await fetch('/api/productos', {
+      method: 'POST',
+      // Sin este header, express.json() no toca el cuerpo y llegaría vacío.
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos),
+    });
+
+    if (!response.ok) {
+      // La API responde los errores anidados: { error: { message } }. El
+      // mensaje viene del modelo y explica qué está mal, no solo el código.
+      const cuerpo = await response.json();
+      throw new Error(cuerpo.error.message);
+    }
+
+    formulario.reset();
+    await cargarProductos();
+    estado.textContent = `«${datos.nombre}» añadido`;
+  } catch (error) {
+    estado.textContent = error.message;
+  } finally {
+    botonEnviar.disabled = false;
+  }
+}
+
+formulario.addEventListener('submit', crearProducto);
 
 cargarProductos();
