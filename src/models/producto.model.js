@@ -36,12 +36,7 @@ export async function buscarPorId(id) {
 }
 
 export async function crear({ nombre, precio, stock }) {
-  const resultado = await query(
-    'INSERT INTO productos (nombre, precio, stock) VALUES (?, ?, ?)',
-    [nombre, precio, stock],
-  );
-
-  return buscarPorId(resultado.insertId);
+  return Producto.create({ nombre, precio, stock });
 }
 
 export async function actualizar(id, { nombre, precio, stock }) {

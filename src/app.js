@@ -39,6 +39,13 @@ app.use((req, res) => {
 // tener CUATRO argumentos. Aunque no se use 'next', el cuarto debe estar:
 // si se quita, Express cree que es un middleware normal y no lo usa.
 app.use((error, req, res, next) => {
+  // Sequelize lanza un tipo de error propio cuando una regla del modelo no
+  // se cumple. Si no se distingue, un nombre vacío saldría como 500 cuando
+  // en realidad es un 400: culpa del que envía los datos, no del servidor.
+  if (error.name === 'SequelizeValidationError') {
+    return res.status(400).json({ error: { message: error.errors[0].message } });
+  }
+
   // No se filtra el error al cliente: un mensaje de MySQL puede contener
   // nombres de tabla, de columna o incluso la contraseña en algunos casos.
   console.error('Error no controlado:', error.message);
