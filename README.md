@@ -39,4 +39,31 @@ npm start
 
 ## Estado
 
-En construcción: la unidad 0 de 9.
+Completo. Las 9 unidades están publicadas y las 33 etapas verificadas.
+
+| | |
+|---|---|
+| 33 commits | uno por to-do, en orden de lectura |
+| 10 tags | `unidad-00` … `unidad-08`, más `solucion` y `extras` |
+| `solucion` | el proyecto terminado, idéntico a `unidad-08` |
+
+`solucion` y `unidad-08` apuntan al mismo commit a propósito: al final del
+taller ya no queda nada por añadir, solo leer lo que hiciste.
+
+Para comprobar que el historial entero sigue vivo:
+
+```bash
+bash scripts/verificar-tags.sh
+```
+
+Crea un worktree por tag, levanta cada versión de la API, le hace el CRUD
+completo y comprueba lo que esa unidad tiene que tener y no lo que tendrá
+después. Es la red de seguridad: si un to-do deja el proyecto roto, salta
+ahí y no dos capítulos más adelante.
+
+## Para quién es
+
+Si vienes del taller, no clones esto para seguir el curso: sigue las unidades
+y el repositorio se va construyendo contigo, commit a commit. Este README es
+para quien ya lo terminó o quiere ver el resultado.
+
