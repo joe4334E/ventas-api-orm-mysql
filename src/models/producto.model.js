@@ -39,19 +39,25 @@ export async function crear({ nombre, precio, stock }) {
 }
 
 export async function actualizar(id, { nombre, precio, stock }) {
-  await query('UPDATE productos SET nombre = ?, precio = ?, stock = ? WHERE id = ?', [
-    nombre,
-    precio,
-    stock,
-    id,
-  ]);
+  const producto = await Producto.findByPk(id);
 
-  return buscarPorId(id);
+  if (!producto) {
+    return null;
+  }
+
+  await producto.update({ nombre, precio, stock });
+  return producto;
 }
 
 export async function borrar(id) {
-  const resultado = await query('DELETE FROM productos WHERE id = ?', [id]);
-  return resultado.affectedRows;
+  const producto = await Producto.findByPk(id);
+
+  if (!producto) {
+    return 0;
+  }
+
+  await producto.destroy();
+  return 1;
 }
 
 export default { listar, buscarPorId, crear, actualizar, borrar };
