@@ -12,12 +12,42 @@ const app = express();
 const carpetaActual = path.dirname(fileURLToPath(import.meta.url));
 const carpetaPublica = path.resolve(carpetaActual, '../public');
 
-app.use(express.json());
+// Quita la cabecera 'X-Powered-By: Express'. No es seguridad, es no decir
+// en qué está escrito.
+app.disable('x-powered-by');
+
+// Sin esto, req.body sería undefined y no se podría crear nada.
+app.use(express.json({ limit: '100kb' }));
 
 // /api/productos y lo que empieza por ahí lo resuelve producto.routes.js
 app.use('/api/productos', productoRoutes);
 
 // Lo de public/ sale tal cual, sin pasar por una ruta.
 app.use(express.static(carpetaPublica));
+
+// Este es el ÚLTIMO. Solo se llega aquí si ninguna ruta anterior respondió.
+// Por eso el orden importa: si se pusiera antes, se comería todo.
+app.use((req, res) => {
+  return res.status(404).json({
+    error: {
+      message: `No existe la ruta ${req.method} ${req.originalUrl}`,
+    },
+  });
+});
+
+// Y este va después del 404. Express distingue los manejadores de error por
+// tener CUATRO argumentos. Aunque no se use 'next', el cuarto debe estar:
+// si se quita, Express cree que es un middleware normal y no lo usa.
+app.use((error, req, res, next) => {
+  // No se filtra el error al cliente: un mensaje de MySQL puede contener
+  // nombres de tabla, de columna o incluso la contraseña en algunos casos.
+  console.error('Error no controlado:', error.message);
+
+  return res.status(500).json({
+    error: {
+      message: 'Error interno del servidor',
+    },
+  });
+});
 
 export default app;
