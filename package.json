@@ -2,6 +2,7 @@
   "name": "ventas-api-orm-mysql",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">=20"
   },
