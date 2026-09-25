@@ -1,7 +1,11 @@
 // La conexión con MySQL. Todo lo que hable con la base pasa por aquí.
 
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import mysql from 'mysql2/promise';
+
+// quiet: true evita que dotenv imprima 'injected env from .env'.
+// Ese ruido confunde: parece un mensaje de error y no lo es.
+dotenv.config({ quiet: true });
 
 // mysql2/promise usa async/await. La alternativa es mysql2 normal, con
 // callbacks: es lo mismo pero cada función necesita un tercer argumento.
