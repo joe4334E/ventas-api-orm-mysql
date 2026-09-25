@@ -7,17 +7,13 @@
 //
 //   3. ESCUCHAR  quedarse esperando en un puerto, un número que el sistema
 //                operativo reserva para esta aplicación.
+//
+// Las dos primeras ya no están aquí: viven en src/app.js. Aquí solo
+// queda la tercera, poner a escuchar.
 
-import express from 'express';
+import app from './src/app.js';
 
 const port = Number.parseInt(process.env.PORT ?? '3000', 10);
-const app = express();
-
-// Una ruta: el método y la dirección. Si alguien pide exactamente eso,
-// ejecuta lo que hay entre llaves.
-app.get('/', (req, res) => {
-  res.send('Hola, soy el servidor del taller');
-});
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
