@@ -18,6 +18,7 @@
             <th scope="col">Producto</th>
             <th scope="col" class="col-precio">Precio</th>
             <th scope="col" class="col-stock">Stock</th>
+            <th scope="col" class="col-acciones">Acciones</th>
           </tr>
         </thead>
         <tbody id="filas"></tbody>
@@ -26,11 +27,12 @@
             <th scope="row" colspan="2">Total del catálogo</th>
             <td id="total-valor" class="col-precio"></td>
             <td id="total-unidades" class="col-stock"></td>
+            <td></td>
           </tr>
         </tfoot>
       </table>
       <form id="formulario" class="formulario">
-        <h2>Añadir producto</h2>
+        <h2 id="titulo-formulario">Añadir producto</h2>
         <div class="campos">
           <label>
             Nombre
@@ -45,7 +47,10 @@
             <input id="campo-stock" name="stock" type="number" step="1" min="0" required />
           </label>
         </div>
-        <button type="submit" id="boton-enviar">Añadir</button>
+        <div class="acciones">
+          <button type="submit" id="boton-enviar">Añadir</button>
+          <button type="button" id="boton-cancelar" hidden>Cancelar</button>
+        </div>
       </form>
     </main>
   </body>

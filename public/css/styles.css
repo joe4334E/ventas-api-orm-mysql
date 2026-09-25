@@ -132,3 +132,17 @@ button:disabled {
   opacity: 0.5;
   cursor: progress;
 }
+
+.col-acciones {
+  width: 11rem;
+}
+
+.acciones,
+.acciones-fila {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.acciones-fila {
+  justify-content: flex-end;
+}

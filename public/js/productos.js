@@ -7,6 +7,13 @@ const totalValor = document.querySelector('#total-valor');
 const totalUnidades = document.querySelector('#total-unidades');
 const formulario = document.querySelector('#formulario');
 const botonEnviar = document.querySelector('#boton-enviar');
+const botonCancelar = document.querySelector('#boton-cancelar');
+const tituloFormulario = document.querySelector('#titulo-formulario');
+
+// El id del producto que se está editando, o null si el formulario está en
+// modo crear. Un solo formulario para las dos cosas: el estado del formulario
+// es una variable, no dos formularios distintos.
+let editando = null;
 
 // El euro necesita dos decimales siempre, y un separador de miles que en
 // español es un punto: 1.234,56 € y no 1,234.56 €.
@@ -35,6 +42,26 @@ function crearFila(producto) {
   if (producto.stock === 0) {
     tr.classList.add('sin-stock');
   }
+
+  // La quinta celda: los dos botones. Se crean como elementos, con su
+  // texto en textContent y su id en dataset, nunca con innerHTML.
+  const acciones = document.createElement('td');
+  acciones.className = 'acciones-fila';
+
+  const editar = document.createElement('button');
+  editar.type = 'button';
+  editar.textContent = 'Editar';
+  editar.dataset.editar = producto.id;
+  editar.addEventListener('click', () => empezarEdicion(producto));
+
+  const borrar = document.createElement('button');
+  borrar.type = 'button';
+  borrar.textContent = 'Borrar';
+  borrar.dataset.borrar = producto.id;
+  borrar.addEventListener('click', () => borrarProducto(producto));
+
+  acciones.append(editar, borrar);
+  tr.appendChild(acciones);
 
   return tr;
 }
@@ -76,7 +103,7 @@ async function cargarProductos() {
   }
 }
 
-async function crearProducto(evento) {
+async function guardarProducto(evento) {
   // Sin esto, el navegador recarga la página entera y se pierde el trabajo.
   evento.preventDefault();
 
@@ -91,10 +118,16 @@ async function crearProducto(evento) {
     stock: Number(formulario.stock.value),
   };
 
+  // El mismo botón, el mismo formulario y el mismo cuerpo JSON. Lo único que
+  // cambia es la dirección y el método: POST /api/productos para crear,
+  // PUT /api/productos/<id> para actualizar.
+  const url = editando === null ? '/api/productos' : `/api/productos/${editando}`;
+  const metodo = editando === null ? 'POST' : 'PUT';
+
   botonEnviar.disabled = true;
   try {
-    const response = await fetch('/api/productos', {
-      method: 'POST',
+    const response = await fetch(url, {
+      method: metodo,
       // Sin este header, express.json() no toca el cuerpo y llegaría vacío.
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datos),
@@ -107,9 +140,11 @@ async function crearProducto(evento) {
       throw new Error(cuerpo.error.message);
     }
 
-    formulario.reset();
+    const mensaje = editando === null ? `«${datos.nombre}» añadido` : `«${datos.nombre}» actualizado`;
+
+    salirDeEdicion();
     await cargarProductos();
-    estado.textContent = `«${datos.nombre}» añadido`;
+    estado.textContent = mensaje;
   } catch (error) {
     estado.textContent = error.message;
   } finally {
@@ -117,6 +152,59 @@ async function crearProducto(evento) {
   }
 }
 
-formulario.addEventListener('submit', crearProducto);
+function empezarEdicion(producto) {
+  editando = producto.id;
+
+  // Rellenar el formulario con los valores de la fila.
+  formulario.nombre.value = producto.nombre;
+  formulario.precio.value = producto.precio;
+  formulario.stock.value = producto.stock;
+
+  // Y cambiar lo que dice, para que se vea en qué modo está.
+  tituloFormulario.textContent = `Editando #${producto.id}`;
+  botonEnviar.textContent = 'Guardar cambios';
+  botonCancelar.hidden = false;
+
+  estado.textContent = `Editando «${producto.nombre}». Pulsa «Cancelar» para volver a crear.`;
+  formulario.nombre.focus();
+}
+
+function salirDeEdicion() {
+  editando = null;
+  formulario.reset();
+  tituloFormulario.textContent = 'Añadir producto';
+  botonEnviar.textContent = 'Añadir';
+  botonCancelar.hidden = true;
+}
+
+async function borrarProducto(producto) {
+  // Borrar no tiene vuelta atrás, así que se pregunta. Un confirm() del
+  // navegador vale aquí: es un tutorial y no hay nada que deshacer.
+  const acepta = window.confirm(`¿Borrar «${producto.nombre}»?`);
+  if (!acepta) return;
+
+  try {
+    const response = await fetch(`/api/productos/${producto.id}`, { method: 'DELETE' });
+
+    if (!response.ok) {
+      const cuerpo = await response.json();
+      throw new Error(cuerpo.error.message);
+    }
+
+    // Si la fila que se estaba editando es justo la que se borra, el
+    // formulario se queda editando un producto que ya no existe.
+    if (editando === producto.id) {
+      salirDeEdicion();
+    }
+
+    await cargarProductos();
+    estado.textContent = `«${producto.nombre}» borrado`;
+  } catch (error) {
+    estado.textContent = error.message;
+  }
+}
+
+formulario.addEventListener('submit', guardarProducto);
+botonCancelar.addEventListener('click', salirDeEdicion);
 
 cargarProductos();
