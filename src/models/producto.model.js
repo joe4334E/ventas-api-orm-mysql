@@ -10,9 +10,10 @@
 //   await Producto.findAll()
 //
 // Estas cinco funciones de aquí son exactamente las que un ORM
-// automatiza. Cuando termine la unidad, el archivo habrá pasado de
-// 40 líneas de SQL a menos de 25, y devuelven lo mismo: los mismos
-// datos, en el mismo orden, con los mismos errores.
+// automatiza. Y aviso: cuando termine la unidad, este archivo no será
+// más corto. Medido: las funciones pasarán de 30 a 35 líneas, y el
+// archivo entero de 41 a 112. El ORM no borra trabajo, lo cambia de
+// sitio. Lo que se gana no está en el número de líneas.
 //
 // La diferencia no es que el SQL desaparezca. El SQL sigue ahí, pero
 // lo escribe el programa en vez de escribirlo tú.
