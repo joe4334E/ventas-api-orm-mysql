@@ -3,7 +3,7 @@
 API REST de un catálogo de productos con **Node.js, Express, MySQL y Sequelize**.
 
 Es el repositorio del taller
-[astrolight](https://astrolight.dev/unidades/00-prepara-tu-maquina/): una API
+[astrolight](https://astrolight-flame.vercel.app/): una API
 construida en 35 pasos, uno por to-do.
 
 ## Cómo se usa
